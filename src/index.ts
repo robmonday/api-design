@@ -1,7 +1,8 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+import config from "./config";
 import app from "./server";
 
-const PORT = 3001;
-
-app.listen(PORT, () => {
-  console.log(`Now listening on port ${PORT}`);
+app.listen(config.port, () => {
+  console.log(`Now listening on http://localhost:${config.port}`);
 });

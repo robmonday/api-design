@@ -1,38 +1,88 @@
 import { Router } from "express";
+import { body } from "express-validator";
+import {
+  createProduct,
+  deleteProduct,
+  getOneProduct,
+  getProducts,
+  updateProduct,
+} from "./handlers/product";
+import {
+  createUpdate,
+  deleteUpdate,
+  getOneUpdate,
+  getUpdates,
+  updateUpdate,
+} from "./handlers/update";
+import { handleInputErrors } from "./middleware";
 
 const router = Router();
 
-router.get("/product", (req, res) => {
-  res.json({ message: "product" });
-});
+router.get("/product", getProducts);
 
 // Product
 
-router.get("/product/:id", () => {});
+router.get("/product/:id", getOneProduct);
 
-router.put("/product/:id", () => {});
+router.put(
+  "/product/:id",
+  body("name").isString(),
+  handleInputErrors,
+  updateProduct
+);
 
-router.post("/product/:id", () => {});
+router.post(
+  "/product/",
+  body("name").isString(),
+  handleInputErrors,
+  createProduct
+);
 
-router.delete("/product/:id", () => {});
+router.delete("/product/:id", deleteProduct);
 
 // Update
 
-router.get("/update/:id", () => {});
+router.get("/update", getUpdates);
 
-router.put("/update/:id", () => {});
+router.get("/update/:id", getOneUpdate);
 
-router.post("/update/:id", () => {});
+router.put(
+  "/update/:id",
+  body("title").optional(),
+  body("body").optional(),
+  body("status").isIn(["LIVE", "IN_PROGRESS", "DEPRECATED"]).optional(),
+  body("version").optional(),
+  updateUpdate
+);
 
-router.delete("/update/:id", () => {});
+router.post(
+  "/update",
+  body("title").exists().isString(),
+  body("body").exists().isString(),
+  body("productId").exists().isString(),
+  createUpdate
+);
+
+router.delete("/update/:id", deleteUpdate);
 
 // Update Points
 
 router.get("/updatepoints/:id", () => {});
 
-router.put("/updatepoints/:id", () => {});
+router.put(
+  "/updatepoints/:id",
+  body("name").optional().isString(),
+  body("description").optional().isString(),
+  () => {}
+);
 
-router.post("/updatepoints/:id", () => {});
+router.post(
+  "/updatepoints/:id",
+  body("name").isString(),
+  body("description").isString(),
+  body("updateId").exists().isString(),
+  () => {}
+);
 
 router.delete("/updatepoints/:id", () => {});
 
